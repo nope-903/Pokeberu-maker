@@ -1,615 +1,572 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Pocket Bell Studio - Minimal Classic Pager</title>
-  
-  <!-- Tailwind CSS & Font Awesome Icons -->
+  <title>Pokeberu Maker</title>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-
+  <!-- Google Fonts: Inter, Noto Sans KR -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+KR:wght@500;700;900&display=swap" rel="stylesheet">
   <style>
     body {
       font-family: 'Inter', 'Noto Sans KR', sans-serif;
       background-color: #ffffff;
-      color: #0f172a;
-    }
-    
-    /* Elegant Clean Scrollbar */
-    ::-webkit-scrollbar {
-      width: 5px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #f8fafc;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #cbd5e1;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #94a3b8;
-    }
-
-    /* Minimalist card shadows */
-    .card-shadow {
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+      color: #1a1a1a;
     }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between overflow-x-hidden antialiased bg-white">
+<body class="min-h-screen flex flex-col items-center justify-start py-8 px-4 sm:px-6">
 
-  <header class="w-full max-w-5xl mx-auto px-6 py-8 flex justify-between items-center border-b border-slate-100">
-    <div class="flex items-center space-x-3">
-      <div class="w-8 h-8 rounded-lg bg-slate-900 flex items-center justify-center">
-        <i class="fa-solid fa-pager text-white text-xs"></i>
-      </div>
-      <div>
-        <h1 class="text-sm font-bold tracking-tight text-slate-900">
-          POCKET BELL STUDIO
-        </h1>
-        <p class="text-[10px] text-slate-400">Minimal Classic Pager Generator</p>
-      </div>
-    </div>
-    
-    <div class="flex items-center space-x-2 text-[11px] text-slate-400 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
-      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-      <span>Reference model: image_3dff68.jpg</span>
-    </div>
+  <!-- 메인 헤더 및 소개 -->
+  <header class="w-full max-w-4xl text-center mb-8">
+    <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 mb-2">Pokeberu Maker</h1>
+    <p class="text-sm sm:text-base text-gray-500">초선명 하드웨어 도트 마스크 기술이 탑재된 최신식 무선호출기</p>
   </header>
 
-  <main class="flex-1 w-full max-w-5xl mx-auto px-4 md:px-6 py-10 grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+  <!-- 메인 컨텐츠 영역: 2단 구성 -->
+  <main class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
     
-    <!-- Left Column: Realistic Canvas Device Display (7 cols) -->
-    <section class="lg:col-span-7 flex flex-col items-center">
+    <!-- 왼쪽: 호출기 렌더링 영역 (6도 할당) -->
+    <div class="lg:col-span-6 flex flex-col items-center justify-center w-full">
+      <!-- 캔버스 컨테이너 -->
+      <div class="relative w-full max-w-[480px] aspect-[4/3] flex items-center justify-center">
+        <canvas id="pagerCanvas" width="960" height="720" class="w-full h-auto cursor-pointer" style="max-width: 480px;"></canvas>
+      </div>
+      <p class="text-xs text-gray-400 mt-4 text-center">💡 본체의 ESC, SET 버튼을 누르면 부저(Beep)음이 울립니다.</p>
+    </div>
+
+    <!-- 오른쪽: 세련되고 시원한 설정 컨트롤 패널 (6도 할당) -->
+    <div class="lg:col-span-6 w-full space-y-6 bg-gray-50 p-6 sm:p-8 rounded-2xl border border-gray-100">
       
-      <!-- Premium Canvas Container with subtle soft shadow -->
-      <div class="relative w-full aspect-[4/3] rounded-2xl bg-slate-50 flex items-center justify-center border border-slate-100 p-2">
-        
-        <!-- Interactive Tip Overlay -->
-        <div class="absolute top-4 left-4 z-10 flex items-center space-x-1.5 bg-white/90 backdrop-blur px-2.5 py-1 rounded-full text-[10px] text-slate-500 border border-slate-100/80 pointer-events-none">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-          <span>버튼 클릭 시 리얼 비프 사운드 재생</span>
+      <!-- 1. 메시지 입력 -->
+      <div class="space-y-2">
+        <label for="messageInput" class="block text-base sm:text-lg font-bold text-gray-800">
+          📠 호출 메시지 입력 (최대 2줄)
+        </label>
+        <textarea 
+          id="messageInput" 
+          rows="2" 
+          maxlength="40"
+          class="w-full px-4 py-3 text-lg border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 placeholder-gray-400 resize-none transition"
+          placeholder="여기에 메시지를 적으세요..."
+        >緊急呼出
+889-9191</textarea>
+        <div class="flex justify-between items-center text-xs text-gray-400">
+          <span>엔터(Enter) 키로 줄바꿈을 할 수 있습니다.</span>
+          <span id="charCount">0 / 40 자</span>
         </div>
-
-        <!-- Canvas Element -->
-        <canvas id="pagerCanvas" width="1200" height="900" class="w-full h-auto object-contain cursor-pointer" title="기기의 버튼을 직접 클릭하면 작동 소리가 재생됩니다."></canvas>
       </div>
 
-      <!-- Quick Action Commands -->
-      <div class="flex gap-3 mt-6 w-full">
-        <button onclick="downloadPagerPNG()" class="flex-1 bg-slate-900 hover:bg-slate-800 active:scale-[0.99] text-white px-5 py-3.5 rounded-xl font-semibold text-xs flex items-center justify-center space-x-2 transition shadow-sm">
-          <i class="fa-solid fa-download"></i>
-          <span>고해상도 투명 PNG 다운로드</span>
+      <!-- 2. 메뉴바 상세 설정 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- 안테나 수신 상태 -->
+        <div class="space-y-2">
+          <label for="antennaSelect" class="block text-base font-bold text-gray-800">📶 안테나 수신 강도</label>
+          <select 
+            id="antennaSelect" 
+            class="w-full px-3 py-2.5 text-base border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 transition"
+          >
+            <option value="4" selected>강함 (4칸)</option>
+            <option value="3">보통 (3칸)</option>
+            <option value="2">약함 (2칸)</option>
+            <option value="1">매우 약함 (1칸)</option>
+            <option value="0">권외 (0칸)</option>
+          </select>
+        </div>
+
+        <!-- 배터리 용량 -->
+        <div class="space-y-2">
+          <label for="batterySelect" class="block text-base font-bold text-gray-800">🔋 배터리 게이지</label>
+          <select 
+            id="batterySelect" 
+            class="w-full px-3 py-2.5 text-base border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 transition"
+          >
+            <option value="3" selected>충분 (3칸)</option>
+            <option value="2">중간 (2칸)</option>
+            <option value="1">부족 (1칸)</option>
+            <option value="0">방전 직전 (0칸)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 3. 시간 및 날짜 설정 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- 날짜 선택 -->
+        <div class="space-y-2">
+          <label for="dateInput" class="block text-base font-bold text-gray-800">📅 날짜 설정</label>
+          <input 
+            type="text" 
+            id="dateInput" 
+            value="9月11日"
+            class="w-full px-3 py-2.5 text-base border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 transition"
+          >
+        </div>
+
+        <!-- 시간 선택 -->
+        <div class="space-y-2">
+          <label for="timeInput" class="block text-base font-bold text-gray-800">⏰ 시간 설정</label>
+          <input 
+            type="text" 
+            id="timeInput" 
+            value="11:09 AM"
+            class="w-full px-3 py-2.5 text-base border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 transition"
+          >
+        </div>
+      </div>
+
+      <!-- 4. 액정 백라이트 기능 토글 -->
+      <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100">
+        <div>
+          <span class="block text-base font-bold text-gray-800">💡 LCD 에메랄드 백라이트</span>
+          <span class="text-xs text-gray-400">90년대 야간용 백라이트 감성을 켭니다.</span>
+        </div>
+        <button 
+          id="backlightToggle"
+          class="px-5 py-2 text-sm font-bold border border-gray-200 rounded-xl hover:bg-black hover:text-white transition-all duration-200 active:scale-95"
+        >
+          백라이트 OFF
         </button>
-        <button onclick="playPagerBeep()" class="bg-slate-50 hover:bg-slate-100 active:scale-[0.99] text-slate-700 px-5 py-3.5 rounded-xl font-medium text-xs flex items-center justify-center space-x-2 border border-slate-200/60 transition">
-          <i class="fa-solid fa-volume-high text-slate-400"></i>
-          <span>비프 부저음 테스트</span>
-        </button>
       </div>
 
-    </section>
+      <!-- 5. 고해상도 투명 PNG 다운로드 버튼 -->
+      <button 
+        id="downloadBtn" 
+        class="w-full py-4 bg-black hover:bg-gray-800 text-white font-extrabold text-lg rounded-xl shadow-lg hover:shadow-xl active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
+        <span>투명 배경 PNG로 저장하기</span>
+      </button>
 
-    <!-- Right Column: Control Settings Panel (5 cols) -->
-    <section class="lg:col-span-5 space-y-6">
-      
-      <!-- Pager Content Control (with enlarged texts and labels) -->
-      <div class="bg-white border border-slate-100 rounded-xl p-6 space-y-5 card-shadow">
-        <div class="border-b border-slate-50 pb-3">
-          <h2 class="text-sm font-bold tracking-wider text-slate-800 uppercase flex items-center gap-2">
-            <i class="fa-regular fa-comment-dots text-slate-800 text-sm"></i> LCD 디스플레이 설정
-          </h2>
-        </div>
-        
-        <div class="space-y-4">
-          <!-- Textarea for 2 Lines Message -->
-          <div>
-            <div class="flex justify-between items-center mb-1.5">
-              <label for="pagerMessage" class="block text-sm font-semibold text-slate-500">📟 출력 문구 입력 (최대 2줄)</label>
-              <!-- Shortcut Hearts insertion buttons -->
-              <div class="flex gap-1">
-                <button onclick="insertAtCursor('♡')" class="px-2 py-1 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded text-xs font-bold text-slate-700 transition">♡</button>
-                <button onclick="insertAtCursor('♥')" class="px-2 py-1 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded text-xs font-bold text-slate-700 transition">♥</button>
-              </div>
-            </div>
-            <textarea id="pagerMessage" rows="2" max="40" oninput="drawPager()" 
-              class="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200/60 text-slate-800 font-mono text-base focus:ring-1 focus:ring-slate-400 focus:border-slate-400 outline-none transition resize-none h-24" 
-              placeholder="줄바꿈(Enter) 시 2줄로 출력됩니다.">緊急呼出&#10;889-9191</textarea>
-          </div>
-
-          <!-- Time Setting -->
-          <div>
-            <label for="pagerTime" class="block text-sm font-semibold text-slate-500 mb-1.5">⏰ 표시 시간 (좌측 상단)</label>
-            <input type="text" id="pagerTime" value="9月11日 11:09 AM" oninput="drawPager()" 
-              class="w-full px-4 py-3 rounded-lg bg-slate-50 border border-slate-200/60 text-slate-800 text-sm font-mono focus:ring-1 focus:ring-slate-400 focus:border-slate-400 outline-none transition">
-          </div>
-
-          <!-- Signal Strength / Antenna Bar -->
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label for="signalStrength" class="block text-sm font-semibold text-slate-500 mb-1.5">📶 안테나 수신 감도</label>
-              <select id="signalStrength" onchange="drawPager()" class="w-full px-3 py-2.5 rounded-lg bg-slate-50 border border-slate-200/60 text-slate-700 text-sm focus:ring-1 focus:ring-slate-400 focus:border-slate-400 outline-none cursor-pointer transition">
-                <option value="4" selected>최대 수신 (4칸)</option>
-                <option value="3">양호함 (3칸)</option>
-                <option value="2">미약함 (2칸)</option>
-                <option value="1">수신 불가 (圈外)</option>
-              </select>
-            </div>
-
-            <!-- Battery Level Indicator Input -->
-            <div>
-              <label for="batteryLevel" class="block text-sm font-semibold text-slate-500 mb-1.5">🔋 배터리 용량 (우측 상단)</label>
-              <select id="batteryLevel" onchange="drawPager()" class="w-full px-3 py-2.5 rounded-lg bg-slate-50 border border-slate-200/60 text-slate-700 text-sm focus:ring-1 focus:ring-slate-400 focus:border-slate-400 outline-none cursor-pointer transition">
-                <option value="3" selected>가득 참 (100%)</option>
-                <option value="2">보통 (60%)</option>
-                <option value="1">부족함 (20%)</option>
-                <option value="0">교체 필요 (0%)</option>
-              </select>
-            </div>
-          </div>
-
-          <!-- Simple Backlight Toggle nested in LCD settings -->
-          <div class="flex items-center justify-between p-3.5 bg-slate-50 rounded-lg border border-slate-100 mt-2">
-            <div class="flex items-center space-x-2">
-              <i class="fa-solid fa-lightbulb text-slate-500 text-sm"></i>
-              <label for="backlight" class="text-sm text-slate-600 font-medium cursor-pointer">액정 백라이트 (일루미네이션)</label>
-            </div>
-            <input type="checkbox" id="backlight" onchange="drawPager()" class="w-4 h-4 text-slate-900 bg-white border-slate-300 rounded focus:ring-slate-900 cursor-pointer">
-          </div>
-        </div>
-      </div>
-
-    </section>
+    </div>
   </main>
 
-  <!-- Clean Footer -->
-  <footer class="w-full max-w-5xl mx-auto px-6 py-8 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center text-[11px] text-slate-400 gap-4 mt-12">
-    <p>© 2026 Pocket Bell Studio. All assets computed via clean high-density vector renderers.</p>
-    <div class="flex items-center space-x-4">
-      <span class="flex items-center space-x-1.5">
-        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span class="text-slate-500">Perfect Render Engine v3.5</span>
-      </span>
-    </div>
+  <footer class="text-xs text-gray-400 mt-auto text-center py-4">
+    <p>© 2026 Pokeberu Maker. All rights reserved.</p>
   </footer>
 
   <script>
-    let audioCtx = null;
+    const canvas = document.getElementById('pagerCanvas');
+    const ctx = canvas.getContext('2d');
 
-    // Classic 90s piezo buzzer sound emulator
-    function playPagerBeep() {
+    const messageInput = document.getElementById('messageInput');
+    const antennaSelect = document.getElementById('antennaSelect');
+    const batterySelect = document.getElementById('batterySelect');
+    const dateInput = document.getElementById('dateInput');
+    const timeInput = document.getElementById('timeInput');
+    const backlightToggle = document.getElementById('backlightToggle');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const charCount = document.getElementById('charCount');
+
+    let isBacklightOn = false;
+    let isESCPressed = false;
+    let isSETPressed = false;
+
+    // 비프음 재생 유틸리티
+    function playBeep(frequency = 2000, duration = 0.08) {
       try {
-        if (!audioCtx) {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        
-        const now = audioCtx.currentTime;
-        
-        const playTone = (time, duration, freq = 2820) => {
-          const osc = audioCtx.createOscillator();
-          const gain = audioCtx.createGain();
-          
-          osc.type = 'square'; // Raw square-wave matches micro-buzzer output perfectly
-          osc.frequency.setValueAtTime(freq, time);
-          
-          gain.gain.setValueAtTime(0.05, time);
-          gain.gain.exponentialRampToValueAtTime(0.001, time + duration - 0.005);
-          
-          osc.connect(gain);
-          gain.connect(audioCtx.destination);
-          
-          osc.start(time);
-          osc.stop(time + duration);
-        };
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
 
-        // Standard double beep melody
-        playTone(now, 0.06);
-        playTone(now + 0.10, 0.06);
-      } catch (e) {
-        console.warn("Audio Context setup delayed until user interaction", e);
-      }
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        oscillator.type = 'sine';
+        oscillator.frequency.value = frequency;
+
+        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
     }
 
-    window.onload = function() {
-      drawPager();
-
-      // Mouse/Touch interaction support directly on the canvas elements
-      const canvas = document.getElementById('pagerCanvas');
-      canvas.addEventListener('click', handleCanvasClick);
-    };
-
-    function insertAtCursor(char) {
-      const input = document.getElementById('pagerMessage');
-      const start = input.selectionStart;
-      const end = input.selectionEnd;
-      const text = input.value;
-      input.value = text.substring(0, start) + char + text.substring(end);
-      input.focus();
-      input.selectionStart = input.selectionEnd = start + char.length;
-      drawPager();
-    }
-
-    function drawPager() {
-      const canvas = document.getElementById('pagerCanvas');
-      const ctx = canvas.getContext('2d');
-      const width = canvas.width;
-      const height = canvas.height;
-
-      // Clean drawing space
-      ctx.clearRect(0, 0, width, height);
-
-      // Core Device Body Parameters (Perfect Centering)
-      const px = 150;
-      const py = 150;
-      const pw = 900;
-      const ph = 600;
-
-      // 1. PHYSICAL BODY BASE DROP SHADOW
-      ctx.save();
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.08)';
-      ctx.shadowBlur = 40;
-      ctx.shadowOffsetX = 0;
-      ctx.shadowOffsetY = 18;
-
-      // 2. MAIN SINGLE-TONE MATTE CHARCOAL BLACK SHELL (은색 베젤 없이 무광 블랙 단색 본체)
-      ctx.beginPath();
-      ctx.roundRect(px, py, pw, ph, 40);
-      ctx.fillStyle = '#17171a'; // Clean pure dark gray/black casing
-      ctx.fill();
-      ctx.restore();
-
-      // Body Bevel Edge Highlight (Dark 3D highlight)
-      ctx.save();
-      ctx.beginPath();
-      ctx.roundRect(px, py, pw, ph, 40);
-      ctx.strokeStyle = '#26262b';
-      ctx.lineWidth = 5;
-      ctx.stroke();
-      ctx.restore();
-
-      // 3. LCD SCREEN OUTLINE RECESS HOUSING (은빛 경계 없이 본체에 매끄럽게 함몰된 화면부 구획)
-      const lW = pw - 120; // 780px Width
-      const lH = ph - 240; // 360px Height (넓고 시원한 액정 면적 확보)
-      const lX = px + (pw - lW) / 2; // Centered horizontally
-      const lY = py + 55;  // Positioned beautifully in the upper half
-
-      ctx.save();
-      ctx.fillStyle = '#0a0a0c'; // Inner deep socket border
-      ctx.beginPath();
-      ctx.roundRect(lX - 8, lY - 8, lW + 16, lH + 16, 12);
-      ctx.fill();
-      ctx.restore();
-
-      // 4. RETRO ELECTRONIC GREY-GREEN LCD SCREEN BACKGROUND
-      ctx.save();
-      const hasBacklight = document.getElementById('backlight').checked;
+    // 초선명 텍스트 드로잉 및 도트 격자 오버레이 마스크 렌더링 기법
+    function drawUltraSharpMessage(message, targetCtx, lcdInnerX, lcdInnerY, lcdInnerW, lcdInnerH) {
+      targetCtx.save();
       
-      if (hasBacklight) {
-        // Soft glowing jade-green backlight gradient
-        const backlightGrad = ctx.createRadialGradient(
-          lX + lW/2, lY + lH/2, 100,
-          lX + lW/2, lY + lH/2, lW
-        );
-        backlightGrad.addColorStop(0, '#a2fab0'); 
-        backlightGrad.addColorStop(1, '#78da8a');
-        ctx.fillStyle = backlightGrad;
+      // 1) LCD 화면 영역 내부로 자르기(Clip) 처리하여 영역 이탈 방지
+      const clipPath = new Path2D();
+      clipPath.roundRect(lcdInnerX, lcdInnerY, lcdInnerW, lcdInnerH, 18);
+      targetCtx.clip(clipPath);
+
+      // 2) 텍스트 렌더링용 가상 스케일링 설정
+      const lines = message.split('\n').slice(0, 2);
+      const isTwoLines = lines.length > 1;
+
+      // 글자 뼈대가 이 빠짐 없이 완벽하게 채워지도록 굵은 폰트 패밀리 지정
+      const fontSize = isTwoLines ? 48 : 72;
+      targetCtx.font = `900 ${fontSize}px "Noto Sans KR", "Inter", "Malgun Gothic", sans-serif`;
+      targetCtx.textAlign = 'center';
+      targetCtx.textBaseline = 'middle';
+
+      // 그림자 및 실제 검정 액정 잉크색상 렌더링
+      const centerX = lcdInnerX + (lcdInnerW / 2);
+      
+      // 메뉴 바 하단 영역의 정중앙에 수직 정렬을 맞춘 Y 기준값
+      const startY = lcdInnerY + 155; 
+
+      // 실제 글자 그리기 (또렷한 가독성의 본체)
+      targetCtx.fillStyle = 'rgba(15, 22, 15, 0.96)';
+
+      if (isTwoLines) {
+        // 2줄 배치 시 상하 대칭이 정밀하게 맞아떨어지도록 정렬 보정
+        targetCtx.fillText(lines[0], centerX, startY - 35);
+        targetCtx.fillText(lines[1], centerX, startY + 35);
       } else {
-        // Classic gray-green electronic watch shade (맑고 차분한 회색빛 연녹색)
-        ctx.fillStyle = '#abc1a6'; 
+        targetCtx.fillText(lines[0], centerX, startY);
       }
+
+      // 3) 도트 매트릭스 픽셀 마스크 오버레이 생성
+      const dotSize = 3;     // 픽셀 도트 입자 알맹이
+      const spacing = 4.2;   // 수평/수직 그리드 피치 간격
       
-      ctx.beginPath();
-      ctx.roundRect(lX, lY, lW, lH, 8);
-      ctx.fill();
+      targetCtx.fillStyle = isBacklightOn ? '#7de8cd' : '#abc1a6'; // 액정 판 본래 색상으로 미세 구멍을 냄
 
-      // Delicate inner LCD border line
-      ctx.strokeStyle = '#5a6b58';
-      ctx.lineWidth = 1.2;
-      ctx.beginPath();
-      ctx.roundRect(lX, lY, lW, lH, 8);
-      ctx.stroke();
-      ctx.restore();
-
-      const timeStr = document.getElementById('pagerTime').value || '';
-      const signalVal = parseInt(document.getElementById('signalStrength').value);
-      const batteryVal = parseInt(document.getElementById('batteryLevel').value);
-
-      ctx.save();
-      ctx.fillStyle = '#1a2417';
-      ctx.strokeStyle = '#1a2417';
-
-      // --- LEFT TOP HUD : Antenna Bar + Display Time (Scaled up for prominent readability) ---
-      // A. Antenna Symbol Drawing (left-aligned) - Bold pixel style
-      const antX = lX + 25;
-      const antY = lY + 24;
-      
-      ctx.save();
-      const menuColor = 'rgba(18, 25, 17, 0.75)'; // Softened to match liquid crystal panel sub-pixels
-      ctx.fillStyle = menuColor;
-      ctx.strokeStyle = menuColor;
-      ctx.lineWidth = 3.2;
-      ctx.beginPath();
-      ctx.moveTo(antX + 15, antY + 26);
-      ctx.lineTo(antX + 15, antY + 2);
-      ctx.moveTo(antX + 3, antY + 2);
-      ctx.lineTo(antX + 27, antY + 2);
-      ctx.stroke();
-
-      // Signal Strength bars - Highly visible & thick bars
-      for (let i = 0; i < 4; i++) {
-        ctx.fillStyle = (signalVal > i) ? menuColor : 'rgba(18, 25, 17, 0.08)';
-        ctx.fillRect(antX + 34 + (i * 9), antY + 26 - (i * 8), 5, i * 8 + 2);
-      }
-      ctx.restore();
-
-      // B. Display Time - Font size increased to 27px for clear presence
-      ctx.save();
-      ctx.fillStyle = menuColor;
-      ctx.font = '900 27px "JetBrains Mono", monospace';
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'top';
-      ctx.fillText(timeStr, antX + 85, antY - 1);
-      ctx.restore();
-
-      // --- RIGHT TOP HUD : Battery Capacity (Thicker, larger layout to match time) ---
-      const batX = lX + lW - 95;
-      const batY = lY + 24;
-
-      ctx.save();
-      ctx.strokeStyle = menuColor;
-      ctx.lineWidth = 3.2;
-      ctx.beginPath();
-      ctx.roundRect(batX, batY, 52, 26, 4);
-      ctx.stroke();
-      
-      // Battery Tip
-      ctx.fillStyle = menuColor;
-      ctx.fillRect(batX + 52, batY + 7, 4, 12);
-
-      // Draw Battery Inside bars
-      for (let i = 0; i < 3; i++) {
-        if (batteryVal > i) {
-          ctx.fillStyle = menuColor;
-          ctx.fillRect(batX + 5 + (i * 15), batY + 5, 12, 16);
+      // LCD 디스플레이 전체 범위에 도트 가이드 격자망 드로잉
+      for (let y = lcdInnerY + 50; y < lcdInnerY + lcdInnerH; y += spacing) {
+        for (let x = lcdInnerX; x < lcdInnerX + lcdInnerW; x += spacing) {
+          // 격자 사이사이에 미세 틈을 깎아내어 글자 영역도 도트로 쪼개져 보이게 만듭니다.
+          targetCtx.fillRect(x + dotSize, y, spacing - dotSize, spacing);
+          targetCtx.fillRect(x, y + dotSize, spacing, spacing - dotSize);
         }
       }
+
+      targetCtx.restore();
+    }
+
+    // 메인 드로잉 함수
+    function render(isDownloadMode = false) {
+      if (isDownloadMode) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      } else {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
+      const originX = 100;
+      const originY = 120;
+      const deviceW = 760;
+      const deviceH = 490;
+      const radius = 64;
+
+      // [1] 기기 본체 뒤쪽 부드러운 그림자
+      ctx.save();
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.22)';
+      ctx.shadowBlur = 48;
+      ctx.shadowOffsetY = 24;
+      ctx.beginPath();
+      ctx.roundRect(originX, originY, deviceW, deviceH, radius);
+      ctx.fillStyle = '#1e2022';
+      ctx.fill();
       ctx.restore();
 
-      // Solid Horizontal separator dividing LCD HUD from the main workspace (Shifted lower to give menu bar space)
+      // [2] 본체 전면 플라스틱 베젤 케이스
+      ctx.save();
       ctx.beginPath();
-      ctx.moveTo(lX + 15, lY + 70);
-      ctx.lineTo(lX + lW - 15, lY + 70);
-      ctx.strokeStyle = 'rgba(18, 25, 17, 0.2)';
+      ctx.roundRect(originX, originY, deviceW, deviceH, radius);
+      ctx.clip();
+
+      const bodyGrad = ctx.createLinearGradient(originX, originY, originX, originY + deviceH);
+      bodyGrad.addColorStop(0, '#2b2d30');
+      bodyGrad.addColorStop(0.3, '#1c1d1f');
+      bodyGrad.addColorStop(1, '#111213');
+      ctx.fillStyle = bodyGrad;
+      ctx.fillRect(originX, originY, deviceW, deviceH);
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      ctx.lineWidth = 4;
+      ctx.strokeRect(originX + 2, originY + 2, deviceW - 4, deviceH - 4);
+      ctx.restore();
+
+      // [3] LCD 디스플레이 플레이트
+      const lcdX = 145;
+      const lcdY = 160;
+      const lcdW = 670;
+      const lcdH = 265;
+      const lcdR = 24;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(lcdX, lcdY, lcdW, lcdH, lcdR);
+      ctx.fillStyle = '#0f1110';
+      ctx.fill();
+
+      const lcdInnerX = lcdX + 6;
+      const lcdInnerY = lcdY + 6;
+      const lcdInnerW = lcdW - 12;
+      const lcdInnerH = lcdH - 12;
+      const lcdInnerR = 18;
+
+      ctx.beginPath();
+      ctx.roundRect(lcdInnerX, lcdInnerY, lcdInnerW, lcdInnerH, lcdInnerR);
+      
+      if (isBacklightOn) {
+        ctx.fillStyle = '#7de8cd'; // 에메랄드 백라이트 활성화
+      } else {
+        ctx.fillStyle = '#abc1a6'; // 기본 차분한 회녹색 LCD 판
+      }
+      ctx.fill();
+
+      const lcdRefGrad = ctx.createLinearGradient(lcdInnerX, lcdInnerY, lcdInnerX, lcdInnerY + lcdInnerH);
+      lcdRefGrad.addColorStop(0, 'rgba(255, 255, 255, 0.15)');
+      lcdRefGrad.addColorStop(1, 'rgba(0, 0, 0, 0.08)');
+      ctx.fillStyle = lcdRefGrad;
+      ctx.fillRect(lcdInnerX, lcdInnerY, lcdInnerW, lcdInnerH);
+      ctx.restore();
+
+      // [4] 최상단 메뉴바 영역 (안테나, 시간, 배터리)
+      ctx.save();
+      ctx.fillStyle = 'rgba(18, 25, 17, 0.75)';
+
+      // 안테나 드로잉
+      const antX = 185;
+      const antY = 212;
+      const antStrength = parseInt(antennaSelect.value);
+
+      ctx.font = 'bold 22px "Courier New", sans-serif';
+      ctx.fillText('A', antX - 22, antY);
+
+      for (let i = 0; i < 4; i++) {
+        const barH = 5 + (i * 5);
+        const barX = antX + (i * 7);
+        const barY = antY - barH;
+        
+        if (i < antStrength) {
+          ctx.fillRect(barX, barY, 4, barH);
+        } else {
+          ctx.fillStyle = 'rgba(18, 25, 17, 0.15)';
+          ctx.fillRect(barX, barY, 4, barH);
+          ctx.fillStyle = 'rgba(18, 25, 17, 0.75)';
+        }
+      }
+
+      // 날짜 및 시간 텍스트 출력
+      const dateText = dateInput.value;
+      const timeText = timeInput.value;
+      const fullTimeStr = `${dateText}  ${timeText}`;
+
+      ctx.font = '900 21px "Courier New", monospace';
+      ctx.fillText(fullTimeStr, antX + 42, antY - 2);
+
+      // 배터리 잔량
+      const batX = 740;
+      const batY = antY - 15;
+      const batStrength = parseInt(batterySelect.value);
+
+      ctx.lineWidth = 3.5;
+      ctx.strokeStyle = 'rgba(18, 25, 17, 0.75)';
+      ctx.strokeRect(batX, batY, 32, 18);
+      ctx.fillRect(batX + 32, batY + 4, 3, 10);
+
+      ctx.fillStyle = 'rgba(18, 25, 17, 0.75)';
+      for (let j = 0; j < batStrength; j++) {
+        ctx.fillRect(batX + 3 + (j * 9), batY + 3, 7, 12);
+      }
+
+      // 구분 가로선
+      ctx.fillStyle = 'rgba(18, 25, 17, 0.2)';
+      ctx.fillRect(165, antY + 12, 630, 2);
+      ctx.restore();
+
+      // [5] 메인 호출 텍스트 연동
+      const message = messageInput.value || "";
+      drawUltraSharpMessage(message, ctx, lcdInnerX, lcdInnerY, lcdInnerW, lcdInnerH);
+
+      // [6] 가로로 긴 알약형 ESC & SET 입체 조작 버튼
+      const btnW = 90;  
+      const btnH = 46;  
+      const escX = 180; 
+      const setX = 310; 
+      const btnY = 505;
+
+      // ESC 버튼
+      ctx.save();
+      ctx.fillStyle = '#0a0b0c';
+      ctx.beginPath();
+      ctx.roundRect(escX - 4, btnY - 4, btnW + 8, btnH + 8, 27);
+      ctx.fill();
+
+      const escGrad = ctx.createLinearGradient(escX, btnY, escX, btnY + btnH);
+      escGrad.addColorStop(0, '#42454a');
+      escGrad.addColorStop(1, '#232528');
+      
+      ctx.beginPath();
+      ctx.roundRect(escX, btnY, btnW, btnH, 23);
+      ctx.fillStyle = isESCPressed ? '#18191a' : escGrad;
+      ctx.fill();
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
       ctx.lineWidth = 2.5;
       ctx.stroke();
+
+      ctx.font = '900 18px "Inter", sans-serif';
+      ctx.fillStyle = '#e2e8f0';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('ESC', escX + (btnW / 2), btnY + (btnH / 2) + 1);
       ctx.restore();
 
-      // 6. STREAMING_CHUNK: High-clarity Dot Matrix Message Projection (Adjusted vertical offset for balance)
-      const message = document.getElementById('pagerMessage').value || '';
-      
-      // Crisp monochrome digital liquid crystal pixel style configuration
-      const pixelCol = 'rgba(18, 25, 17, 0.95)';
-      const pixelOffCol = 'rgba(18, 25, 17, 0.025)'; // Faint ghost background LCD grids
-
-      // Render the digital display utilizing an offscreen buffer (Starting at Y + 85 for perfect symmetry)
-      renderPixelMessage(ctx, message, lX + 25, lY + 85, lW - 50, lH - 105, 3.0, pixelCol, pixelOffCol);
-
-      // Gloss reflection layer over screen glass for absolute realism
+      // SET 버튼
       ctx.save();
+      ctx.fillStyle = '#0a0b0c';
       ctx.beginPath();
-      ctx.roundRect(lX, lY, lW, lH, 8);
-      ctx.clip();
-      
-      const reflection = ctx.createLinearGradient(lX, lY, lX + lW, lY + lH);
-      reflection.addColorStop(0, 'rgba(255, 255, 255, 0.08)');
-      reflection.addColorStop(0.3, 'rgba(255, 255, 255, 0.0)');
-      reflection.addColorStop(1, 'rgba(255, 255, 255, 0.01)');
-      ctx.fillStyle = reflection;
+      ctx.roundRect(setX - 4, btnY - 4, btnW + 8, btnH + 8, 27);
       ctx.fill();
+
+      const setGrad = ctx.createLinearGradient(setX, btnY, setX, btnY + btnH);
+      setGrad.addColorStop(0, '#42454a');
+      setGrad.addColorStop(1, '#232528');
+
+      ctx.beginPath();
+      ctx.roundRect(setX, btnY, btnW, btnH, 23);
+      ctx.fillStyle = isSETPressed ? '#18191a' : setGrad;
+      ctx.fill();
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      ctx.font = '900 18px "Inter", sans-serif';
+      ctx.fillStyle = '#e2e8f0';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('SET', setX + (btnW / 2), btnY + (btnH / 2) + 1);
       ctx.restore();
 
-      // 7. STREAMING_CHUNK: Rendering Pill-Shaped Buttons with wider spacing
-      // 물리 버튼 그리기 (ESC와 SET 사이의 여유로운 공간 확보를 위해 넓게 배치)
-      drawClassicPillButton(ctx, px + 140, py + 510, 130, 60, 'ESC');
-      drawClassicPillButton(ctx, px + 340, py + 510, 130, 60, 'SET');
-      
-      // 우측 하단 방향키 지우고, POCKET BELL 로고 멋지게 프린팅
-      drawPrintedLogo(ctx, px + 710, py + 510);
-
-      // Notification Pilot Light (Micro LED indicator at top-right edge)
+      // [7] 오른쪽 하단 브랜드 로고 및 데코 선
       ctx.save();
-      ctx.beginPath();
-      ctx.arc(px + pw - 60, py + 26, 5, 0, Math.PI * 2);
-      ctx.fillStyle = '#dc2626'; // Vivid retro LED Red
-      ctx.fill();
-      ctx.beginPath();
-      ctx.arc(px + pw - 62, py + 24, 1.5, 0, Math.PI * 2);
-      ctx.fillStyle = '#ffffff';
-      ctx.fill();
+      const logoX = 665;
+      const logoY = 528;
+
+      ctx.textAlign = 'center';
+      ctx.font = 'bold 23px "Inter", sans-serif';
+      ctx.fillStyle = '#9e8d78'; 
+      ctx.fillText('POCKET BELL', logoX, logoY);
+
+      ctx.fillStyle = '#6e7075';
+      ctx.fillRect(logoX - 65, logoY + 12, 130, 2.5);
       ctx.restore();
     }
 
-    /**
-     * Renders any text strings at a high-density dot matrix layout utilizing offscreen pixel extracting logic.
-     * This achieves incredibly sharp, angular retro electronic-watch style representation.
-     * Supports newline split for 2 lines.
-     */
-    function renderPixelMessage(ctx, text, x, y, maxW, maxH, pixelSize, pixelColor, pixelOffColor) {
-      if (!text) return;
+    // 상태 동기화 및 바인딩
+    function updateCharCount() {
+      const len = messageInput.value.length;
+      charCount.textContent = `${len} / 40 자`;
+    }
 
-      const buffer = document.createElement('canvas');
-      const bCtx = buffer.getContext('2d');
-      
-      // Create offscreen canvas proportionate to LCD size
-      buffer.width = Math.ceil(maxW / pixelSize);
-      buffer.height = Math.ceil(maxH / pixelSize);
-      
-      bCtx.fillStyle = '#000000';
-      bCtx.textAlign = 'center';
-      bCtx.textBaseline = 'middle';
+    [messageInput, antennaSelect, batterySelect, dateInput, timeInput].forEach(elem => {
+      elem.addEventListener('input', () => {
+        updateCharCount();
+        render();
+      });
+    });
 
-      const lines = text.split('\n').slice(0, 2); // Limit to maximum 2 lines
-      
-      if (lines.length === 1) {
-        // High visibility larger font size for single-line projection
-        bCtx.font = 'bold 24px "Noto Sans KR", "JetBrains Mono", sans-serif';
-        bCtx.fillText(lines[0], buffer.width / 2, buffer.height / 2 + 1);
+    backlightToggle.addEventListener('click', () => {
+      isBacklightOn = !isBacklightOn;
+      if (isBacklightOn) {
+        backlightToggle.textContent = '백라이트 ON';
+        backlightToggle.classList.add('bg-black', 'text-white');
+        playBeep(2200, 0.05);
       } else {
-        // Sophisticated custom offset sizing for perfect 2-line rendering layout
-        bCtx.font = 'bold 16px "Noto Sans KR", "JetBrains Mono", sans-serif';
-        bCtx.fillText(lines[0], buffer.width / 2, buffer.height / 2 - 12);
-        bCtx.fillText(lines[1], buffer.width / 2, buffer.height / 2 + 12);
+        backlightToggle.textContent = '백라이트 OFF';
+        backlightToggle.classList.remove('bg-black', 'text-white');
+        playBeep(1800, 0.05);
       }
+      render();
+    });
 
-      const imgData = bCtx.getImageData(0, 0, buffer.width, buffer.height);
-      const data = imgData.data;
+    function getCanvasMousePos(e) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: (e.clientX - rect.left) * (canvas.width / rect.width),
+        y: (e.clientY - rect.top) * (canvas.height / rect.height)
+      };
+    }
 
-      ctx.save();
-      ctx.translate(x, y);
+    canvas.addEventListener('mousedown', (e) => {
+      const pos = getCanvasMousePos(e);
+      const btnW = 90;
+      const btnH = 46;
+      const btnY = 505;
 
-      const gap = 1; // 1px spacing between liquid crystal units
+      if (pos.x >= 180 && pos.x <= 180 + btnW && pos.y >= btnY && pos.y <= btnY + btnH) {
+        isESCPressed = true;
+        playBeep(2100, 0.12);
+        render();
+      }
+      if (pos.x >= 310 && pos.x <= 310 + btnW && pos.y >= btnY && pos.y <= btnY + btnH) {
+        isSETPressed = true;
+        playBeep(2500, 0.08);
+        render();
+      }
+    });
 
-      // Loop and paint individual physical micro dot matrix segments
-      for (let r = 0; r < buffer.height; r++) {
-        for (let c = 0; c < buffer.width; c++) {
-          const idx = (r * buffer.width + c) * 4;
-          const alpha = data[idx + 3];
-          
-          const dx = c * pixelSize;
-          const dy = r * pixelSize;
+    window.addEventListener('mouseup', () => {
+      if (isESCPressed || isSETPressed) {
+        isESCPressed = false;
+        isSETPressed = false;
+        render();
+      }
+    });
 
-          if (alpha > 90) { // Clear sharp binary pixel mask
-            ctx.fillStyle = pixelColor;
-            ctx.fillRect(dx, dy, pixelSize - gap, pixelSize - gap);
-          } else {
-            // Faint grid layout placeholder pattern for absolute digital fidelity
-            ctx.fillStyle = pixelOffColor;
-            ctx.fillRect(dx, dy, pixelSize - gap, pixelSize - gap);
-          }
+    canvas.addEventListener('touchstart', (e) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        const pos = {
+          x: (touch.clientX - rect.left) * (canvas.width / rect.width),
+          y: (touch.clientY - rect.top) * (canvas.height / rect.height)
+        };
+
+        const btnW = 90;
+        const btnH = 46;
+        const btnY = 505;
+
+        if (pos.x >= 180 && pos.x <= 180 + btnW && pos.y >= btnY && pos.y <= btnY + btnH) {
+          isESCPressed = true;
+          playBeep(2100, 0.12);
+          render();
+        }
+        if (pos.x >= 310 && pos.x <= 310 + btnW && pos.y >= btnY && pos.y <= btnY + btnH) {
+          isSETPressed = true;
+          playBeep(2500, 0.08);
+          render();
         }
       }
-      ctx.restore();
-    }
+    });
 
-    function drawClassicPillButton(ctx, x, y, w, h, txt) {
-      ctx.save();
-      // Socket depth shadow
-      ctx.fillStyle = '#0a0a0c';
-      ctx.beginPath();
-      ctx.roundRect(x - w/2, y - h/2 + 4, w, h, h/2);
-      ctx.fill();
+    canvas.addEventListener('touchend', () => {
+      isESCPressed = false;
+      isSETPressed = false;
+      render();
+    });
 
-      // Outer Bezel/Rim
-      ctx.fillStyle = '#17171a';
-      ctx.strokeStyle = '#2d2d35';
-      ctx.lineWidth = 3;
-      ctx.beginPath();
-      ctx.roundRect(x - w/2, y - h/2, w, h, h/2);
-      ctx.fill();
-      ctx.stroke();
+    // 고품질 투명 배경 PNG 추출 모드 실행
+    downloadBtn.addEventListener('click', () => {
+      render(true);
 
-      // Top Face of push button (Alkyak Capsule Gradient)
-      const btnFace = ctx.createLinearGradient(x - w/2, y - h/2, x + w/2, y + h/2);
-      btnFace.addColorStop(0, '#3f3f46');
-      btnFace.addColorStop(0.4, '#27272a');
-      btnFace.addColorStop(1, '#18181b');
-      ctx.fillStyle = btnFace;
-      ctx.beginPath();
-      ctx.roundRect(x - w/2 + 3, y - h/2 + 3, w - 6, h - 6, (h - 6)/2);
-      ctx.fill();
+      const link = document.createElement('a');
+      link.download = 'pocket-bell-transparent.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
 
-      // Highlight inner stroke
-      ctx.strokeStyle = '#52525b';
-      ctx.lineWidth = 1;
-      ctx.stroke();
+      setTimeout(() => {
+        render(false);
+      }, 100);
+    });
 
-      // Typography - Bold and Big text size inside pill shape
-      ctx.fillStyle = '#f4f4f5';
-      ctx.font = 'bold 18px "Inter", sans-serif';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(txt, x, y);
-      ctx.restore();
-    }
-
-    function drawPrintedLogo(ctx, x, y) {
-      ctx.save();
-      // Matte Silver-grey printed brand typography (Clean, minimalist 90s aesthetic)
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      
-      // Shadow layer to give a subtle engraved screen-print look
-      ctx.fillStyle = '#09090b';
-      ctx.font = '900 36px "Inter", sans-serif';
-      ctx.letterSpacing = '5px';
-      ctx.fillText('POCKET BELL', x, y + 2);
-
-      // Top layer
-      ctx.fillStyle = '#a1a1aa'; // Pure matte metallic grey text color
-      ctx.font = '900 36px "Inter", sans-serif';
-      ctx.letterSpacing = '5px';
-      ctx.fillText('POCKET BELL', x, y);
-      ctx.restore();
-    }
-
-    // Handles button coordinate mapping logic for clicks on canvas parts
-    function handleCanvasClick(e) {
-      const canvas = document.getElementById('pagerCanvas');
-      const rect = canvas.getBoundingClientRect();
-      const scaleX = canvas.width / rect.width;
-      const scaleY = canvas.height / rect.height;
-      
-      const x = (e.clientX - rect.left) * scaleX;
-      const y = (e.clientY - rect.top) * scaleY;
-
-      // Alignment anchors
-      const px = 150;
-      const py = 150;
-
-      // Pill-shaped coordinates boundary check (더 넓어진 ESC/SET 버튼 중심축에 매칭)
-      const escX = px + 140;
-      const escY = py + 510;
-      const setX = px + 340;
-      const setY = py + 510;
-
-      // ESC Button (Pill boundary detection box)
-      if (x >= escX - 65 && x <= escX + 65 && y >= escY - 30 && y <= escY + 30) {
-        // Toggle illumination light mode
-        const toggle = document.getElementById('backlight');
-        toggle.checked = !toggle.checked;
-        playPagerBeep();
-        drawPager();
-        return;
-      }
-
-      // SET Button (Pill boundary detection box)
-      if (x >= setX - 65 && x <= setX + 65 && y >= setY - 30 && y <= setY + 30) {
-        // Trigger alert buzzer noise
-        playPagerBeep();
-        return;
-      }
-    }
-
-    // Compiles drawing context into crisp high-density png files with alpha transparencies
-    function downloadPagerPNG() {
-      const canvas = document.getElementById('pagerCanvas');
-      if (!canvas) return;
-
-      try {
-        const url = canvas.toDataURL("image/png");
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = `POCKET_BELL_STUDIO_${Date.now()}.png`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      } catch (err) {
-        console.error("Unable to capture canvas buffer stream", err);
-      }
-    }
+    window.onload = function() {
+      updateCharCount();
+      render();
+    };
   </script>
+
 </body>
 </html>
+
