@@ -40,6 +40,38 @@
     <!-- 오른쪽: 세련되고 시원한 설정 컨트롤 패널 (6도 할당) -->
     <div class="lg:col-span-6 w-full space-y-6 bg-gray-50 p-6 sm:p-8 rounded-2xl border border-gray-100">
       
+      <!-- 기기 디자인 커스텀 섹션 -->
+      <div class="bg-white p-4 rounded-xl border border-gray-100 space-y-4">
+        <h3 class="text-base font-bold text-gray-800">🎨 기기 외관 설정 (커스텀)</h3>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- 기기 색상 변경 -->
+          <div class="space-y-1.5">
+            <label for="colorSelect" class="block text-sm font-semibold text-gray-600">본체 색상</label>
+            <select 
+              id="colorSelect" 
+              class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 transition"
+            >
+              <option value="black" selected>BLACK (기존 매트 블랙)</option>
+              <option value="silver">SILVER (메탈릭 실버)</option>
+            </select>
+          </div>
+
+          <!-- 기기 로고 변경 -->
+          <div class="space-y-1.5">
+            <label for="logoSelect" class="block text-sm font-semibold text-gray-600">브랜드 로고</label>
+            <select 
+              id="logoSelect" 
+              class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 transition"
+            >
+              <option value="pocketbell" selected>POCKET BELL</option>
+              <option value="motorola">MOTOROLA</option>
+              <option value="seoul">서・울・삐・삐</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
       <!-- 1. 메시지 입력 -->
       <div class="space-y-2">
         <label for="messageInput" class="block text-base sm:text-lg font-bold text-gray-800">
@@ -161,6 +193,10 @@
     const downloadBtn = document.getElementById('downloadBtn');
     const charCount = document.getElementById('charCount');
 
+    // 커스텀 셀렉터 바인딩
+    const colorSelect = document.getElementById('colorSelect');
+    const logoSelect = document.getElementById('logoSelect');
+
     let isBacklightOn = false;
     let isESCPressed = false;
     let isSETPressed = false;
@@ -222,7 +258,7 @@
         targetCtx.fillText(lines[0], centerX, startY);
       }
 
-      // 3) 도트 매트릭스 픽셀 마스크 오버레이 생성
+      // 3) 도트 매트릭스 픽셀 마스크 오버레이 생성 (초선명 글자 위에 픽셀 모눈망을 입혀 레트로 효과 극대화)
       const dotSize = 3;     // 픽셀 도트 입자 알맹이
       const spacing = 4.2;   // 수평/수직 그리드 피치 간격
       
@@ -255,31 +291,46 @@
       const deviceH = 490;
       const radius = 64;
 
-      // [1] 기기 본체 뒤쪽 부드러운 그림자
+      const currentBodyColor = colorSelect.value; // 'black' or 'silver'
+
+      // [1] 기기 본체 뒤쪽 부드러운 그림자 (실버 바디일 때는 그림자를 미세하게 더 투명하고 부드럽게 조정)
       ctx.save();
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.22)';
+      ctx.shadowColor = currentBodyColor === 'black' ? 'rgba(0, 0, 0, 0.22)' : 'rgba(0, 0, 0, 0.16)';
       ctx.shadowBlur = 48;
       ctx.shadowOffsetY = 24;
       ctx.beginPath();
       ctx.roundRect(originX, originY, deviceW, deviceH, radius);
-      ctx.fillStyle = '#1e2022';
+      ctx.fillStyle = currentBodyColor === 'black' ? '#1e2022' : '#cbd5e1';
       ctx.fill();
       ctx.restore();
 
-      // [2] 본체 전면 플라스틱 베젤 케이스
+      // [2] 본체 전면 플라스틱 베젤 케이스 (색상 선택값에 따라 가변 그라데이션 부여)
       ctx.save();
       ctx.beginPath();
       ctx.roundRect(originX, originY, deviceW, deviceH, radius);
       ctx.clip();
 
       const bodyGrad = ctx.createLinearGradient(originX, originY, originX, originY + deviceH);
-      bodyGrad.addColorStop(0, '#2b2d30');
-      bodyGrad.addColorStop(0.3, '#1c1d1f');
-      bodyGrad.addColorStop(1, '#111213');
+      if (currentBodyColor === 'black') {
+        // 기존의 중후한 리얼 차콜 블랙
+        bodyGrad.addColorStop(0, '#2b2d30');
+        bodyGrad.addColorStop(0.3, '#1c1d1f');
+        bodyGrad.addColorStop(1, '#111213');
+      } else {
+        // 프리미엄 아노다이징 실버 메탈 느낌
+        bodyGrad.addColorStop(0, '#f8fafc');
+        bodyGrad.addColorStop(0.3, '#cbd5e1');
+        bodyGrad.addColorStop(1, '#94a3b8');
+      }
       ctx.fillStyle = bodyGrad;
       ctx.fillRect(originX, originY, deviceW, deviceH);
 
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      // 본체 하이라이트 베젤 테두리선
+      if (currentBodyColor === 'black') {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      } else {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)'; // 실버일 때는 반사 하이라이트를 더 화사하게 표현
+      }
       ctx.lineWidth = 4;
       ctx.strokeRect(originX + 2, originY + 2, deviceW - 4, deviceH - 4);
       ctx.restore();
@@ -374,7 +425,7 @@
       ctx.fillRect(165, antY + 12, 630, 2);
       ctx.restore();
 
-      // [5] 메인 호출 텍스트 연동
+      // [5] 메인 호출 텍스트 "초선명 하드웨어 도트 렌더링" 연동
       const message = messageInput.value || "";
       drawUltraSharpMessage(message, ctx, lcdInnerX, lcdInnerY, lcdInnerW, lcdInnerH);
 
@@ -387,18 +438,25 @@
 
       // ESC 버튼
       ctx.save();
+      // 음각 깊이 베젤
       ctx.fillStyle = '#0a0b0c';
       ctx.beginPath();
       ctx.roundRect(escX - 4, btnY - 4, btnW + 8, btnH + 8, 27);
       ctx.fill();
 
       const escGrad = ctx.createLinearGradient(escX, btnY, escX, btnY + btnH);
-      escGrad.addColorStop(0, '#42454a');
-      escGrad.addColorStop(1, '#232528');
+      // 실버 바디일 때는 버튼의 명도를 조절해 조화롭게 설계
+      if (currentBodyColor === 'black') {
+        escGrad.addColorStop(0, '#42454a');
+        escGrad.addColorStop(1, '#232528');
+      } else {
+        escGrad.addColorStop(0, '#334155');
+        escGrad.addColorStop(1, '#1e293b');
+      }
       
       ctx.beginPath();
       ctx.roundRect(escX, btnY, btnW, btnH, 23);
-      ctx.fillStyle = isESCPressed ? '#18191a' : escGrad;
+      ctx.fillStyle = isESCPressed ? '#0f172a' : escGrad;
       ctx.fill();
 
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
@@ -414,18 +472,24 @@
 
       // SET 버튼
       ctx.save();
+      // 음각 깊이 베젤
       ctx.fillStyle = '#0a0b0c';
       ctx.beginPath();
       ctx.roundRect(setX - 4, btnY - 4, btnW + 8, btnH + 8, 27);
       ctx.fill();
 
       const setGrad = ctx.createLinearGradient(setX, btnY, setX, btnY + btnH);
-      setGrad.addColorStop(0, '#42454a');
-      setGrad.addColorStop(1, '#232528');
+      if (currentBodyColor === 'black') {
+        setGrad.addColorStop(0, '#42454a');
+        setGrad.addColorStop(1, '#232528');
+      } else {
+        setGrad.addColorStop(0, '#334155');
+        setGrad.addColorStop(1, '#1e293b');
+      }
 
       ctx.beginPath();
       ctx.roundRect(setX, btnY, btnW, btnH, 23);
-      ctx.fillStyle = isSETPressed ? '#18191a' : setGrad;
+      ctx.fillStyle = isSETPressed ? '#0f172a' : setGrad;
       ctx.fill();
 
       ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
@@ -439,17 +503,40 @@
       ctx.fillText('SET', setX + (btnW / 2), btnY + (btnH / 2) + 1);
       ctx.restore();
 
-      // [7] 오른쪽 하단 브랜드 로고 및 데코 선
+      // [7] 오른쪽 하단 브랜드 로고 커스텀 출력부 (피드백 반영)
       ctx.save();
       const logoX = 665;
       const logoY = 528;
 
-      ctx.textAlign = 'center';
-      ctx.font = 'bold 23px "Inter", sans-serif';
-      ctx.fillStyle = '#9e8d78'; 
-      ctx.fillText('POCKET BELL', logoX, logoY);
+      const currentLogo = logoSelect.value;
 
-      ctx.fillStyle = '#6e7075';
+      // 로고에 맞는 고유 텍스트 및 서체 렌더링 설정
+      if (currentLogo === 'pocketbell') {
+        ctx.textAlign = 'center';
+        ctx.font = 'bold 23px "Inter", sans-serif';
+        ctx.fillStyle = currentBodyColor === 'black' ? '#9e8d78' : '#334155'; 
+        ctx.fillText('POCKET BELL', logoX, logoY);
+      } else if (currentLogo === 'motorola') {
+        ctx.textAlign = 'center';
+        ctx.font = '900 24px "Inter", sans-serif';
+        ctx.fillStyle = currentBodyColor === 'black' ? '#8a94a6' : '#1e293b'; 
+        ctx.fillText('MOTOROLA', logoX, logoY);
+      } else if (currentLogo === 'seoul') {
+        // [수정] 캔버스의 scale을 가로로 길게 변환해 레트로한 인쇄 기법 구현
+        ctx.translate(logoX, logoY);
+        ctx.scale(1.35, 0.9); // 가로로 35% 늘리고, 세로로 10% 살짝 압축하여 flat하게 묘사
+        
+        ctx.textAlign = 'center';
+        ctx.font = '900 22px "Batang", "Gungsuh", "Noto Sans KR", serif';
+        ctx.fillStyle = currentBodyColor === 'black' ? '#a5b4fc' : '#4338ca'; 
+        ctx.fillText('서・울・삐・삐', 0, 0);
+      }
+
+      ctx.restore();
+
+      // 브랜드 하단 장식 데코선 그리기 (로고 영역 외부에 고정)
+      ctx.save();
+      ctx.fillStyle = currentBodyColor === 'black' ? '#6e7075' : '#94a3b8';
       ctx.fillRect(logoX - 65, logoY + 12, 130, 2.5);
       ctx.restore();
     }
@@ -460,7 +547,7 @@
       charCount.textContent = `${len} / 40 자`;
     }
 
-    [messageInput, antennaSelect, batterySelect, dateInput, timeInput].forEach(elem => {
+    [messageInput, antennaSelect, batterySelect, dateInput, timeInput, colorSelect, logoSelect].forEach(elem => {
       elem.addEventListener('input', () => {
         updateCharCount();
         render();
@@ -552,7 +639,9 @@
       render(true);
 
       const link = document.createElement('a');
-      link.download = 'pocket-bell-transparent.png';
+      const colorName = colorSelect.value;
+      const logoName = logoSelect.value;
+      link.download = `pokeberu-${colorName}-${logoName}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
 
@@ -569,4 +658,3 @@
 
 </body>
 </html>
-
