@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -21,7 +22,7 @@
   <!-- 메인 헤더 및 소개 -->
   <header class="w-full max-w-4xl text-center mb-8">
     <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 mb-2">Pokeberu Maker</h1>
-    <p class="text-sm sm:text-base text-gray-500">초선명 도트 마스크 기술이 탑재된 최신식 무선호출기</p>
+    <p class="text-sm sm:text-base text-gray-500">초선명 하드웨어 도트 마스크 기술이 탑재된 최신식 무선호출기</p>
   </header>
 
   <!-- 메인 컨텐츠 영역: 2단 구성 -->
@@ -33,7 +34,7 @@
       <div class="relative w-full max-w-[480px] aspect-[4/3] flex items-center justify-center">
         <canvas id="pagerCanvas" width="960" height="720" class="w-full h-auto cursor-pointer" style="max-width: 480px;"></canvas>
       </div>
-      <p class="text-xs text-gray-400 mt-4 text-center">💡 본체의 ESC, SET 버튼을 누르면 부저(Beep)음이 울립니다.</p>
+      <p class="text-xs text-gray-400 mt-4 text-center">💡 본체의 ESC 버튼을 누르면 백라이트가 켜지고 꺼집니다.</p>
     </div>
 
     <!-- 오른쪽: 세련되고 시원한 설정 컨트롤 패널 (6도 할당) -->
@@ -41,7 +42,7 @@
       
       <!-- 기기 디자인 커스텀 섹션 -->
       <div class="bg-white p-4 rounded-xl border border-gray-100 space-y-4">
-        <h3 class="text-base font-bold text-gray-800">🎨 기기 외관 설정 </h3>
+        <h3 class="text-base font-bold text-gray-800">🎨 기기 외관 설정 (커스텀)</h3>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <!-- 기기 색상 변경 -->
@@ -51,7 +52,7 @@
               id="colorSelect" 
               class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 transition"
             >
-              <option value="black" selected>BLACK (매트 블랙)</option>
+              <option value="black" selected>BLACK (기존 매트 블랙)</option>
               <option value="silver">SILVER (메탈릭 실버)</option>
             </select>
           </div>
@@ -129,7 +130,7 @@
           <input 
             type="text" 
             id="dateInput" 
-            value="1994年3月14日"
+            value="9月11日"
             class="w-full px-3 py-2.5 text-base border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 transition"
           >
         </div>
@@ -140,7 +141,7 @@
           <input 
             type="text" 
             id="timeInput" 
-            value="12:31 PM"
+            value="11:09 AM"
             class="w-full px-3 py-2.5 text-base border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 transition"
           >
         </div>
@@ -149,7 +150,7 @@
       <!-- 4. 액정 백라이트 기능 토글 -->
       <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100">
         <div>
-          <span class="block text-base font-bold text-gray-800">💡 LCD 에메랄드 백라이트</span>
+          <span class="block text-base font-bold text-gray-800">💡 LCD 백라이트</span>
           <span class="text-xs text-gray-400">90년대 야간용 백라이트 감성을 켭니다.</span>
         </div>
         <button 
@@ -260,7 +261,8 @@
       const dotSize = 3;     // 픽셀 도트 입자 알맹이
       const spacing = 4.2;   // 수평/수직 그리드 피치 간격
       
-      targetCtx.fillStyle = isBacklightOn ? '#7de8cd' : '#abc1a6'; // 액정 판 본래 색상으로 미세 구멍을 냄
+      // [수정] 백라이트 ON 상태일 때 뚫고 나올 배경 구멍의 색상도 새 연녹색 테마에 맞추어 연동
+      targetCtx.fillStyle = isBacklightOn ? '#92f497' : '#abc1a6'; 
 
       // LCD 디스플레이 전체 범위에 도트 가이드 격자망 드로잉
       for (let y = lcdInnerY + 50; y < lcdInnerY + lcdInnerH; y += spacing) {
@@ -355,8 +357,9 @@
       ctx.beginPath();
       ctx.roundRect(lcdInnerX, lcdInnerY, lcdInnerW, lcdInnerH, lcdInnerR);
       
+      // [수정] 백라이트 ON 시 첨부 이미지의 부드럽고 상큼한 파스텔 형광 연녹색 테마 적용
       if (isBacklightOn) {
-        ctx.fillStyle = '#7de8cd'; // 에메랄드 백라이트 활성화
+        ctx.fillStyle = '#92f497'; // 이미지와 일치시킨 화사한 형광 파스텔 연녹색
       } else {
         ctx.fillStyle = '#abc1a6'; // 기본 차분한 회녹색 LCD 판
       }
@@ -379,7 +382,7 @@
       const antStrength = parseInt(antennaSelect.value);
 
       ctx.font = 'bold 22px "Courier New", sans-serif';
-      ctx.fillText('T', antX - 22, antY);
+      ctx.fillText('A', antX - 22, antY);
 
       for (let i = 0; i < 4; i++) {
         const barH = 5 + (i * 5);
@@ -543,7 +546,8 @@
       });
     });
 
-    backlightToggle.addEventListener('click', () => {
+    // 백라이트 토글 공통 제어 함수
+    function toggleBacklight() {
       isBacklightOn = !isBacklightOn;
       if (isBacklightOn) {
         backlightToggle.textContent = '백라이트 ON';
@@ -555,7 +559,10 @@
         playBeep(1800, 0.05);
       }
       render();
-    });
+    }
+
+    // UI 사이드 제어판 버튼 클릭
+    backlightToggle.addEventListener('click', toggleBacklight);
 
     function getCanvasMousePos(e) {
       const rect = canvas.getBoundingClientRect();
@@ -565,6 +572,7 @@
       };
     }
 
+    // 마우스 이벤트 바인딩
     canvas.addEventListener('mousedown', (e) => {
       const pos = getCanvasMousePos(e);
       const btnW = 90;
@@ -573,8 +581,7 @@
 
       if (pos.x >= 180 && pos.x <= 180 + btnW && pos.y >= btnY && pos.y <= btnY + btnH) {
         isESCPressed = true;
-        playBeep(2100, 0.12);
-        render();
+        toggleBacklight(); // 마우스 클릭 시 정밀하게 1회 토글 실행
       }
       if (pos.x >= 310 && pos.x <= 310 + btnW && pos.y >= btnY && pos.y <= btnY + btnH) {
         isSETPressed = true;
@@ -591,7 +598,9 @@
       }
     });
 
+    // 모바일 터치 이벤트 바인딩 (더블 트리거 방지)
     canvas.addEventListener('touchstart', (e) => {
+      e.preventDefault(); 
       if (e.touches.length > 0) {
         const touch = e.touches[0];
         const rect = canvas.getBoundingClientRect();
@@ -606,8 +615,7 @@
 
         if (pos.x >= 180 && pos.x <= 180 + btnW && pos.y >= btnY && pos.y <= btnY + btnH) {
           isESCPressed = true;
-          playBeep(2100, 0.12);
-          render();
+          toggleBacklight(); // 터치 시 정밀하게 1회 토글 실행
         }
         if (pos.x >= 310 && pos.x <= 310 + btnW && pos.y >= btnY && pos.y <= btnY + btnH) {
           isSETPressed = true;
@@ -615,9 +623,10 @@
           render();
         }
       }
-    });
+    }, { passive: false });
 
-    canvas.addEventListener('touchend', () => {
+    canvas.addEventListener('touchend', (e) => {
+      e.preventDefault();
       isESCPressed = false;
       isSETPressed = false;
       render();
