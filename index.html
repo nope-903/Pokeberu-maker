@@ -522,13 +522,10 @@
         ctx.fillStyle = currentBodyColor === 'black' ? '#8a94a6' : '#1e293b'; 
         ctx.fillText('MOTOROLA', logoX, logoY);
       } else if (currentLogo === 'seoul') {
-        // [수정] 캔버스의 scale을 가로로 길게 변환해 레트로한 인쇄 기법 구현
-        ctx.translate(logoX, logoY);
-        ctx.scale(1.35, 0.9); // 가로로 35% 늘리고, 세로로 10% 살짝 압축하여 flat하게 묘사
         
         ctx.textAlign = 'center';
-        ctx.font = '900 22px "Batang", "Gungsuh", "Noto Sans KR", serif';
-        ctx.fillStyle = currentBodyColor === 'black' ? '#a5b4fc' : '#4338ca'; 
+        ctx.font = '900 24px "Gungsuh", "Noto Sans KR", serif';
+        ctx.fillStyle = currentBodyColor === 'black' ? '#fb923c' : '#fb923c'; 
         ctx.fillText('서・울・삐・삐', 0, 0);
       }
 
