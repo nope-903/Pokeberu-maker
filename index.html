@@ -1,47 +1,69 @@
+```html
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pokeberu Maker</title>
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter, Noto Sans KR -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+KR:wght@500;700;900&display=swap" rel="stylesheet">
   <style>
-    body { font-family: 'Inter', 'Noto Sans KR', sans-serif; background-color: #ffffff; color: #1a1a1a; }
+    body {
+      font-family: 'Inter', 'Noto Sans KR', sans-serif;
+      background-color: #ffffff;
+      color: #1a1a1a;
+    }
   </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-start py-8 px-4 sm:px-6">
 
+  <!-- 메인 헤더 및 소개 -->
   <header class="w-full max-w-4xl text-center mb-8">
     <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 mb-2">Pokeberu Maker</h1>
     <p class="text-sm sm:text-base text-gray-500">초선명 하드웨어 도트 마스크 기술이 탑재된 최신식 무선호출기</p>
   </header>
 
+  <!-- 메인 컨텐츠 영역: 2단 구성 -->
   <main class="w-full max-w-5xl grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mb-12">
     
+    <!-- 왼쪽: 호출기 렌더링 영역 (6도 할당) -->
     <div class="lg:col-span-6 flex flex-col items-center justify-center w-full">
+      <!-- 캔버스 컨테이너 -->
       <div class="relative w-full max-w-[480px] aspect-[4/3] flex items-center justify-center">
         <canvas id="pagerCanvas" width="960" height="720" class="w-full h-auto cursor-pointer" style="max-width: 480px;"></canvas>
       </div>
       <p class="text-xs text-gray-400 mt-4 text-center">💡 본체의 ESC, SET 버튼을 누르면 부저(Beep)음이 울립니다.</p>
     </div>
 
+    <!-- 오른쪽: 세련되고 시원한 설정 컨트롤 패널 (6도 할당) -->
     <div class="lg:col-span-6 w-full space-y-6 bg-gray-50 p-6 sm:p-8 rounded-2xl border border-gray-100">
+      
+      <!-- 기기 디자인 커스텀 섹션 -->
       <div class="bg-white p-4 rounded-xl border border-gray-100 space-y-4">
-        <h3 class="text-base font-bold text-gray-800">🎨 기기 외관 설정 (커스텀)</h3>
+        <h3 class="text-base font-bold text-gray-800">🎨 기기 외관 설정 </h3>
         
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- 기기 색상 변경 -->
           <div class="space-y-1.5">
             <label for="colorSelect" class="block text-sm font-semibold text-gray-600">본체 색상</label>
-            <select id="colorSelect" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 transition">
-              <option value="black" selected>BLACK (기존 매트 블랙)</option>
+            <select 
+              id="colorSelect" 
+              class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 transition"
+            >
+              <option value="black" selected>BLACK (매트 블랙)</option>
               <option value="silver">SILVER (메탈릭 실버)</option>
             </select>
           </div>
 
+          <!-- 기기 로고 변경 -->
           <div class="space-y-1.5">
             <label for="logoSelect" class="block text-sm font-semibold text-gray-600">브랜드 로고</label>
-            <select id="logoSelect" class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 transition">
+            <select 
+              id="logoSelect" 
+              class="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 transition"
+            >
               <option value="pocketbell" selected>POCKET BELL</option>
               <option value="motorola">MOTOROLA</option>
             </select>
@@ -49,93 +71,580 @@
         </div>
       </div>
 
+      <!-- 1. 메시지 입력 -->
       <div class="space-y-2">
-        <label for="messageInput" class="block text-base sm:text-lg font-bold text-gray-800">📠 호출 메시지 입력</label>
-        <textarea id="messageInput" rows="2" maxlength="40" class="w-full px-4 py-3 text-lg border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 placeholder-gray-400 resize-none transition">緊急呼出
+        <label for="messageInput" class="block text-base sm:text-lg font-bold text-gray-800">
+          📠 호출 메시지 입력 (최대 2줄)
+        </label>
+        <textarea 
+          id="messageInput" 
+          rows="2" 
+          maxlength="40"
+          class="w-full px-4 py-3 text-lg border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 placeholder-gray-400 resize-none transition"
+          placeholder="여기에 메시지를 적으세요..."
+        >緊急呼出
 889-9191</textarea>
+        <div class="flex justify-between items-center text-xs text-gray-400">
+          <span>엔터(Enter) 키로 줄바꿈을 할 수 있습니다.</span>
+          <span id="charCount">0 / 40 자</span>
+        </div>
       </div>
 
-      <button id="downloadBtn" class="w-full py-4 bg-black hover:bg-gray-800 text-white font-extrabold text-lg rounded-xl shadow-lg hover:shadow-xl active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2">
+      <!-- 2. 메뉴바 상세 설정 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- 안테나 수신 상태 -->
+        <div class="space-y-2">
+          <label for="antennaSelect" class="block text-base font-bold text-gray-800">📶 안테나 수신 강도</label>
+          <select 
+            id="antennaSelect" 
+            class="w-full px-3 py-2.5 text-base border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 transition"
+          >
+            <option value="4" selected>강함 (4칸)</option>
+            <option value="3">보통 (3칸)</option>
+            <option value="2">약함 (2칸)</option>
+            <option value="1">매우 약함 (1칸)</option>
+            <option value="0">권외 (0칸)</option>
+          </select>
+        </div>
+
+        <!-- 배터리 용량 -->
+        <div class="space-y-2">
+          <label for="batterySelect" class="block text-base font-bold text-gray-800">🔋 배터리 게이지</label>
+          <select 
+            id="batterySelect" 
+            class="w-full px-3 py-2.5 text-base border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 transition"
+          >
+            <option value="3" selected>충분 (3칸)</option>
+            <option value="2">중간 (2칸)</option>
+            <option value="1">부족 (1칸)</option>
+            <option value="0">방전 직전 (0칸)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- 3. 시간 및 날짜 설정 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- 날짜 선택 -->
+        <div class="space-y-2">
+          <label for="dateInput" class="block text-base font-bold text-gray-800">📅 날짜 설정</label>
+          <input 
+            type="text" 
+            id="dateInput" 
+            value="9月11日"
+            class="w-full px-3 py-2.5 text-base border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 transition"
+          >
+        </div>
+
+        <!-- 시간 선택 -->
+        <div class="space-y-2">
+          <label for="timeInput" class="block text-base font-bold text-gray-800">⏰ 시간 설정</label>
+          <input 
+            type="text" 
+            id="timeInput" 
+            value="11:09 AM"
+            class="w-full px-3 py-2.5 text-base border border-gray-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-black font-semibold text-gray-800 transition"
+          >
+        </div>
+      </div>
+
+      <!-- 4. 액정 백라이트 기능 토글 -->
+      <div class="flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100">
+        <div>
+          <span class="block text-base font-bold text-gray-800">💡 LCD 에메랄드 백라이트</span>
+          <span class="text-xs text-gray-400">90년대 야간용 백라이트 감성을 켭니다.</span>
+        </div>
+        <button 
+          id="backlightToggle"
+          class="px-5 py-2 text-sm font-bold border border-gray-200 rounded-xl hover:bg-black hover:text-white transition-all duration-200 active:scale-95"
+        >
+          백라이트 OFF
+        </button>
+      </div>
+
+      <!-- 5. 고해상도 투명 PNG 다운로드 버튼 -->
+      <button 
+        id="downloadBtn" 
+        class="w-full py-4 bg-black hover:bg-gray-800 text-white font-extrabold text-lg rounded-xl shadow-lg hover:shadow-xl active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+        </svg>
         <span>투명 배경 PNG로 저장하기</span>
       </button>
+
     </div>
   </main>
+
+  <footer class="text-xs text-gray-400 mt-auto text-center py-4">
+    <p>© 2026 Pokeberu Maker. All rights reserved.</p>
+  </footer>
 
   <script>
     const canvas = document.getElementById('pagerCanvas');
     const ctx = canvas.getContext('2d');
+
     const messageInput = document.getElementById('messageInput');
-    const antennaSelect = document.getElementById('antennaSelect') || { value: '4' };
-    const batterySelect = document.getElementById('batterySelect') || { value: '3' };
-    const dateInput = document.getElementById('dateInput') || { value: '9月11日' };
-    const timeInput = document.getElementById('timeInput') || { value: '11:09 AM' };
+    const antennaSelect = document.getElementById('antennaSelect');
+    const batterySelect = document.getElementById('batterySelect');
+    const dateInput = document.getElementById('dateInput');
+    const timeInput = document.getElementById('timeInput');
+    const backlightToggle = document.getElementById('backlightToggle');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const charCount = document.getElementById('charCount');
+
+    // 커스텀 셀렉터 바인딩
     const colorSelect = document.getElementById('colorSelect');
     const logoSelect = document.getElementById('logoSelect');
-    const downloadBtn = document.getElementById('downloadBtn');
 
     let isBacklightOn = false;
+    let isESCPressed = false;
+    let isSETPressed = false;
 
+    // 비프음 재생 유틸리티
+    function playBeep(frequency = 2000, duration = 0.08) {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+
+        oscillator.type = 'sine';
+        oscillator.frequency.value = frequency;
+
+        gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+
+        oscillator.start();
+        oscillator.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    // 초선명 텍스트 드로잉 및 도트 격자 오버레이 마스크 렌더링 기법
+    function drawUltraSharpMessage(message, targetCtx, lcdInnerX, lcdInnerY, lcdInnerW, lcdInnerH) {
+      targetCtx.save();
+      
+      // 1) LCD 화면 영역 내부로 자르기(Clip) 처리하여 영역 이탈 방지
+      const clipPath = new Path2D();
+      clipPath.roundRect(lcdInnerX, lcdInnerY, lcdInnerW, lcdInnerH, 18);
+      targetCtx.clip(clipPath);
+
+      // 2) 텍스트 렌더링용 가상 스케일링 설정
+      const lines = message.split('\n').slice(0, 2);
+      const isTwoLines = lines.length > 1;
+
+      // 글자 뼈대가 이 빠짐 없이 완벽하게 채워지도록 굵은 폰트 패밀리 지정
+      const fontSize = isTwoLines ? 48 : 72;
+      targetCtx.font = `900 ${fontSize}px "Noto Sans KR", "Inter", "Malgun Gothic", sans-serif`;
+      targetCtx.textAlign = 'center';
+      targetCtx.textBaseline = 'middle';
+
+      // 그림자 및 실제 검정 액정 잉크색상 렌더링
+      const centerX = lcdInnerX + (lcdInnerW / 2);
+      
+      // 메뉴 바 하단 영역의 정중앙에 수직 정렬을 맞춘 Y 기준값
+      const startY = lcdInnerY + 155; 
+
+      // 실제 글자 그리기 (또렷한 가독성의 본체)
+      targetCtx.fillStyle = 'rgba(15, 22, 15, 0.96)';
+
+      if (isTwoLines) {
+        // 2줄 배치 시 상하 대칭이 정밀하게 맞아떨어지도록 정렬 보정
+        targetCtx.fillText(lines[0], centerX, startY - 35);
+        targetCtx.fillText(lines[1], centerX, startY + 35);
+      } else {
+        targetCtx.fillText(lines[0], centerX, startY);
+      }
+
+      // 3) 도트 매트릭스 픽셀 마스크 오버레이 생성 (초선명 글자 위에 픽셀 모눈망을 입혀 레트로 효과 극대화)
+      const dotSize = 3;     // 픽셀 도트 입자 알맹이
+      const spacing = 4.2;   // 수평/수직 그리드 피치 간격
+      
+      targetCtx.fillStyle = isBacklightOn ? '#7de8cd' : '#abc1a6'; // 액정 판 본래 색상으로 미세 구멍을 냄
+
+      // LCD 디스플레이 전체 범위에 도트 가이드 격자망 드로잉
+      for (let y = lcdInnerY + 50; y < lcdInnerY + lcdInnerH; y += spacing) {
+        for (let x = lcdInnerX; x < lcdInnerX + lcdInnerW; x += spacing) {
+          // 격자 사이사이에 미세 틈을 깎아내어 글자 영역도 도트로 쪼개져 보이게 만듭니다.
+          targetCtx.fillRect(x + dotSize, y, spacing - dotSize, spacing);
+          targetCtx.fillRect(x, y + dotSize, spacing, spacing - dotSize);
+        }
+      }
+
+      targetCtx.restore();
+    }
+
+    // 메인 드로잉 함수
     function render(isDownloadMode = false) {
-      if (isDownloadMode) ctx.clearRect(0, 0, canvas.width, canvas.height);
-      else { ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, canvas.width, canvas.height); }
+      if (isDownloadMode) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      } else {
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
 
-      const originX = 100, originY = 120, deviceW = 760, deviceH = 490, radius = 64;
-      const currentBodyColor = colorSelect.value;
+      const originX = 100;
+      const originY = 120;
+      const deviceW = 760;
+      const deviceH = 490;
+      const radius = 64;
 
-      // 본체
+      const currentBodyColor = colorSelect.value; // 'black' or 'silver'
+
+      // [1] 기기 본체 뒤쪽 부드러운 그림자 (실버 바디일 때는 그림자를 미세하게 더 투명하고 부드럽게 조정)
       ctx.save();
+      ctx.shadowColor = currentBodyColor === 'black' ? 'rgba(0, 0, 0, 0.22)' : 'rgba(0, 0, 0, 0.16)';
+      ctx.shadowBlur = 48;
+      ctx.shadowOffsetY = 24;
       ctx.beginPath();
       ctx.roundRect(originX, originY, deviceW, deviceH, radius);
       ctx.fillStyle = currentBodyColor === 'black' ? '#1e2022' : '#cbd5e1';
       ctx.fill();
       ctx.restore();
 
-      // LCD
-      const lcdX = 145, lcdY = 160, lcdW = 670, lcdH = 265;
+      // [2] 본체 전면 플라스틱 베젤 케이스 (색상 선택값에 따라 가변 그라데이션 부여)
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(originX, originY, deviceW, deviceH, radius);
+      ctx.clip();
+
+      const bodyGrad = ctx.createLinearGradient(originX, originY, originX, originY + deviceH);
+      if (currentBodyColor === 'black') {
+        // 기존의 중후한 리얼 차콜 블랙
+        bodyGrad.addColorStop(0, '#2b2d30');
+        bodyGrad.addColorStop(0.3, '#1c1d1f');
+        bodyGrad.addColorStop(1, '#111213');
+      } else {
+        // 프리미엄 아노다이징 실버 메탈 느낌
+        bodyGrad.addColorStop(0, '#f8fafc');
+        bodyGrad.addColorStop(0.3, '#cbd5e1');
+        bodyGrad.addColorStop(1, '#94a3b8');
+      }
+      ctx.fillStyle = bodyGrad;
+      ctx.fillRect(originX, originY, deviceW, deviceH);
+
+      // 본체 하이라이트 베젤 테두리선
+      if (currentBodyColor === 'black') {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.08)';
+      } else {
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)'; // 실버일 때는 반사 하이라이트를 더 화사하게 표현
+      }
+      ctx.lineWidth = 4;
+      ctx.strokeRect(originX + 2, originY + 2, deviceW - 4, deviceH - 4);
+      ctx.restore();
+
+      // [3] LCD 디스플레이 플레이트
+      const lcdX = 145;
+      const lcdY = 160;
+      const lcdW = 670;
+      const lcdH = 265;
+      const lcdR = 24;
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.roundRect(lcdX, lcdY, lcdW, lcdH, lcdR);
       ctx.fillStyle = '#0f1110';
-      ctx.beginPath();
-      ctx.roundRect(lcdX, lcdY, lcdW, lcdH, 24);
-      ctx.fill();
-      ctx.fillStyle = isBacklightOn ? '#7de8cd' : '#abc1a6';
-      ctx.beginPath();
-      ctx.roundRect(lcdX + 6, lcdY + 6, lcdW - 12, lcdH - 12, 18);
       ctx.fill();
 
-      // 로고
+      const lcdInnerX = lcdX + 6;
+      const lcdInnerY = lcdY + 6;
+      const lcdInnerW = lcdW - 12;
+      const lcdInnerH = lcdH - 12;
+      const lcdInnerR = 18;
+
+      ctx.beginPath();
+      ctx.roundRect(lcdInnerX, lcdInnerY, lcdInnerW, lcdInnerH, lcdInnerR);
+      
+      if (isBacklightOn) {
+        ctx.fillStyle = '#7de8cd'; // 에메랄드 백라이트 활성화
+      } else {
+        ctx.fillStyle = '#abc1a6'; // 기본 차분한 회녹색 LCD 판
+      }
+      ctx.fill();
+
+      const lcdRefGrad = ctx.createLinearGradient(lcdInnerX, lcdInnerY, lcdInnerX, lcdInnerY + lcdInnerH);
+      lcdRefGrad.addColorStop(0, 'rgba(255, 255, 255, 0.15)');
+      lcdRefGrad.addColorStop(1, 'rgba(0, 0, 0, 0.08)');
+      ctx.fillStyle = lcdRefGrad;
+      ctx.fillRect(lcdInnerX, lcdInnerY, lcdInnerW, lcdInnerH);
+      ctx.restore();
+
+      // [4] 최상단 메뉴바 영역 (안테나, 시간, 배터리)
       ctx.save();
-      const logoX = 665, logoY = 528;
+      ctx.fillStyle = 'rgba(18, 25, 17, 0.75)';
+
+      // 안테나 드로잉
+      const antX = 185;
+      const antY = 212;
+      const antStrength = parseInt(antennaSelect.value);
+
+      ctx.font = 'bold 22px "Courier New", sans-serif';
+      ctx.fillText('T', antX - 22, antY);
+
+      for (let i = 0; i < 4; i++) {
+        const barH = 5 + (i * 5);
+        const barX = antX + (i * 7);
+        const barY = antY - barH;
+        
+        if (i < antStrength) {
+          ctx.fillRect(barX, barY, 4, barH);
+        } else {
+          ctx.fillStyle = 'rgba(18, 25, 17, 0.15)';
+          ctx.fillRect(barX, barY, 4, barH);
+          ctx.fillStyle = 'rgba(18, 25, 17, 0.75)';
+        }
+      }
+
+      // 날짜 및 시간 텍스트 출력
+      const dateText = dateInput.value;
+      const timeText = timeInput.value;
+      const fullTimeStr = `${dateText}  ${timeText}`;
+
+      ctx.font = '900 21px "Courier New", monospace';
+      ctx.fillText(fullTimeStr, antX + 42, antY - 2);
+
+      // 배터리 잔량
+      const batX = 740;
+      const batY = antY - 15;
+      const batStrength = parseInt(batterySelect.value);
+
+      ctx.lineWidth = 3.5;
+      ctx.strokeStyle = 'rgba(18, 25, 17, 0.75)';
+      ctx.strokeRect(batX, batY, 32, 18);
+      ctx.fillRect(batX + 32, batY + 4, 3, 10);
+
+      ctx.fillStyle = 'rgba(18, 25, 17, 0.75)';
+      for (let j = 0; j < batStrength; j++) {
+        ctx.fillRect(batX + 3 + (j * 9), batY + 3, 7, 12);
+      }
+
+      // 구분 가로선
+      ctx.fillStyle = 'rgba(18, 25, 17, 0.2)';
+      ctx.fillRect(165, antY + 12, 630, 2);
+      ctx.restore();
+
+      // [5] 메인 호출 텍스트 "초선명 하드웨어 도트 렌더링" 연동
+      const message = messageInput.value || "";
+      drawUltraSharpMessage(message, ctx, lcdInnerX, lcdInnerY, lcdInnerW, lcdInnerH);
+
+      // [6] 가로로 긴 알약형 ESC & SET 입체 조작 버튼
+      const btnW = 90;  
+      const btnH = 46;  
+      const escX = 180; 
+      const setX = 310; 
+      const btnY = 505;
+
+      // ESC 버튼
+      ctx.save();
+      // 음각 깊이 베젤
+      ctx.fillStyle = '#0a0b0c';
+      ctx.beginPath();
+      ctx.roundRect(escX - 4, btnY - 4, btnW + 8, btnH + 8, 27);
+      ctx.fill();
+
+      const escGrad = ctx.createLinearGradient(escX, btnY, escX, btnY + btnH);
+      // 실버 바디일 때는 버튼의 명도를 조절해 조화롭게 설계
+      if (currentBodyColor === 'black') {
+        escGrad.addColorStop(0, '#42454a');
+        escGrad.addColorStop(1, '#232528');
+      } else {
+        escGrad.addColorStop(0, '#334155');
+        escGrad.addColorStop(1, '#1e293b');
+      }
+      
+      ctx.beginPath();
+      ctx.roundRect(escX, btnY, btnW, btnH, 23);
+      ctx.fillStyle = isESCPressed ? '#0f172a' : escGrad;
+      ctx.fill();
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      ctx.font = '900 18px "Inter", sans-serif';
+      ctx.fillStyle = '#e2e8f0';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('ESC', escX + (btnW / 2), btnY + (btnH / 2) + 1);
+      ctx.restore();
+
+      // SET 버튼
+      ctx.save();
+      // 음각 깊이 베젤
+      ctx.fillStyle = '#0a0b0c';
+      ctx.beginPath();
+      ctx.roundRect(setX - 4, btnY - 4, btnW + 8, btnH + 8, 27);
+      ctx.fill();
+
+      const setGrad = ctx.createLinearGradient(setX, btnY, setX, btnY + btnH);
+      if (currentBodyColor === 'black') {
+        setGrad.addColorStop(0, '#42454a');
+        setGrad.addColorStop(1, '#232528');
+      } else {
+        setGrad.addColorStop(0, '#334155');
+        setGrad.addColorStop(1, '#1e293b');
+      }
+
+      ctx.beginPath();
+      ctx.roundRect(setX, btnY, btnW, btnH, 23);
+      ctx.fillStyle = isSETPressed ? '#0f172a' : setGrad;
+      ctx.fill();
+
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      ctx.font = '900 18px "Inter", sans-serif';
+      ctx.fillStyle = '#e2e8f0';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('SET', setX + (btnW / 2), btnY + (btnH / 2) + 1);
+      ctx.restore();
+
+      // [7] 오른쪽 하단 브랜드 로고 커스텀 출력부
+      ctx.save();
+      const logoX = 665;
+      const logoY = 528;
+
       const currentLogo = logoSelect.value;
 
-      ctx.textAlign = 'center';
+      // 로고에 맞는 고유 텍스트 및 서체 렌더링 설정
       if (currentLogo === 'pocketbell') {
+        ctx.textAlign = 'center';
         ctx.font = 'bold 23px "Inter", sans-serif';
         ctx.fillStyle = currentBodyColor === 'black' ? '#9e8d78' : '#334155'; 
         ctx.fillText('POCKET BELL', logoX, logoY);
       } else if (currentLogo === 'motorola') {
+        ctx.textAlign = 'center';
         ctx.font = '900 24px "Inter", sans-serif';
         ctx.fillStyle = currentBodyColor === 'black' ? '#8a94a6' : '#1e293b'; 
         ctx.fillText('MOTOROLA', logoX, logoY);
       }
 
+      ctx.restore();
+
+      // 브랜드 하단 장식 데코선 그리기 (로고 영역 외부에 고정)
+      ctx.save();
       ctx.fillStyle = currentBodyColor === 'black' ? '#6e7075' : '#94a3b8';
       ctx.fillRect(logoX - 65, logoY + 12, 130, 2.5);
       ctx.restore();
     }
 
-    [colorSelect, logoSelect, messageInput].forEach(elem => {
-      elem.addEventListener('input', () => render());
+    // 상태 동기화 및 바인딩
+    function updateCharCount() {
+      const len = messageInput.value.length;
+      charCount.textContent = `${len} / 40 자`;
+    }
+
+    [messageInput, antennaSelect, batterySelect, dateInput, timeInput, colorSelect, logoSelect].forEach(elem => {
+      elem.addEventListener('input', () => {
+        updateCharCount();
+        render();
+      });
     });
 
+    backlightToggle.addEventListener('click', () => {
+      isBacklightOn = !isBacklightOn;
+      if (isBacklightOn) {
+        backlightToggle.textContent = '백라이트 ON';
+        backlightToggle.classList.add('bg-black', 'text-white');
+        playBeep(2200, 0.05);
+      } else {
+        backlightToggle.textContent = '백라이트 OFF';
+        backlightToggle.classList.remove('bg-black', 'text-white');
+        playBeep(1800, 0.05);
+      }
+      render();
+    });
+
+    function getCanvasMousePos(e) {
+      const rect = canvas.getBoundingClientRect();
+      return {
+        x: (e.clientX - rect.left) * (canvas.width / rect.width),
+        y: (e.clientY - rect.top) * (canvas.height / rect.height)
+      };
+    }
+
+    canvas.addEventListener('mousedown', (e) => {
+      const pos = getCanvasMousePos(e);
+      const btnW = 90;
+      const btnH = 46;
+      const btnY = 505;
+
+      if (pos.x >= 180 && pos.x <= 180 + btnW && pos.y >= btnY && pos.y <= btnY + btnH) {
+        isESCPressed = true;
+        playBeep(2100, 0.12);
+        render();
+      }
+      if (pos.x >= 310 && pos.x <= 310 + btnW && pos.y >= btnY && pos.y <= btnY + btnH) {
+        isSETPressed = true;
+        playBeep(2500, 0.08);
+        render();
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isESCPressed || isSETPressed) {
+        isESCPressed = false;
+        isSETPressed = false;
+        render();
+      }
+    });
+
+    canvas.addEventListener('touchstart', (e) => {
+      if (e.touches.length > 0) {
+        const touch = e.touches[0];
+        const rect = canvas.getBoundingClientRect();
+        const pos = {
+          x: (touch.clientX - rect.left) * (canvas.width / rect.width),
+          y: (touch.clientY - rect.top) * (canvas.height / rect.height)
+        };
+
+        const btnW = 90;
+        const btnH = 46;
+        const btnY = 505;
+
+        if (pos.x >= 180 && pos.x <= 180 + btnW && pos.y >= btnY && pos.y <= btnY + btnH) {
+          isESCPressed = true;
+          playBeep(2100, 0.12);
+          render();
+        }
+        if (pos.x >= 310 && pos.x <= 310 + btnW && pos.y >= btnY && pos.y <= btnY + btnH) {
+          isSETPressed = true;
+          playBeep(2500, 0.08);
+          render();
+        }
+      }
+    });
+
+    canvas.addEventListener('touchend', () => {
+      isESCPressed = false;
+      isSETPressed = false;
+      render();
+    });
+
+    // 고품질 투명 배경 PNG 추출 모드 실행
     downloadBtn.addEventListener('click', () => {
       render(true);
+
       const link = document.createElement('a');
-      link.download = 'pager.png';
+      const colorName = colorSelect.value;
+      const logoName = logoSelect.value;
+      link.download = `pokeberu-${colorName}-${logoName}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
-      render(false);
+
+      setTimeout(() => {
+        render(false);
+      }, 100);
     });
 
-    window.onload = () => render();
+    window.onload = function() {
+      updateCharCount();
+      render();
+    };
   </script>
+
 </body>
 </html>
